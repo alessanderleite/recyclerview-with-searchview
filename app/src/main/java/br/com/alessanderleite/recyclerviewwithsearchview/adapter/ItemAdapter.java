@@ -6,25 +6,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.alessanderleite.recyclerviewwithsearchview.R;
 import br.com.alessanderleite.recyclerviewwithsearchview.model.Item;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
+public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> implements Filterable {
 
-    private List<Item> itemList;
+    private List<Item> exampleList;
+    private List<Item> exampleListFull;
     private Context context;
 
-    public ItemAdapter(List<Item> itemList, Context context) {
-        this.itemList = itemList;
+
+    public ItemAdapter(List<Item> exampleList, List<Item> exampleListFull, Context context) {
+        this.exampleList = exampleList;
+        this.exampleListFull = new ArrayList<>(exampleList);
         this.context = context;
     }
 
@@ -37,7 +41,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int i) {
-        Item item = itemList.get(i);
+        Item item = exampleList.get(i);
 
         holder.mLogin.setText(item.getLogin());
         holder.mHtmlUrl.setText(item.getHtmlUrl());
@@ -49,7 +53,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return exampleList.size();
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -66,4 +70,40 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
             mAvatar = (ImageView) itemView.findViewById(R.id.img_avatar);
         }
     }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Item> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(exampleListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Item item : exampleListFull) {
+                    if (item.getLogin().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            exampleList.clear();
+            exampleList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 }
