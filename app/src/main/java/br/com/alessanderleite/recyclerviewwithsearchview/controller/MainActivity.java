@@ -1,7 +1,9 @@
-package br.com.alessanderleite.recyclerviewwithsearchview;
+package br.com.alessanderleite.recyclerviewwithsearchview.controller;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import br.com.alessanderleite.recyclerviewwithsearchview.R;
 
 public class MainActivity extends AppCompatActivity {
 
