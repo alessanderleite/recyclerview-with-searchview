@@ -26,7 +26,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     private Context context;
 
 
-    public ItemAdapter(List<Item> exampleList, List<Item> exampleListFull, Context context) {
+    public ItemAdapter(List<Item> exampleList, Context context) {
         this.exampleList = exampleList;
         this.exampleListFull = new ArrayList<>(exampleList);
         this.context = context;
@@ -56,6 +56,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         return exampleList.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mLogin;
@@ -71,10 +76,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         }
     }
 
-    @Override
-    public Filter getFilter() {
-        return exampleFilter;
-    }
+
 
     private Filter exampleFilter = new Filter() {
         @Override
